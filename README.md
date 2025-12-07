@@ -166,13 +166,8 @@ npm run dev
 
 ---
 
-## 📜 License
-
-MIT License.
-
----
 
 ## 👨‍💻 Author
 
-**Your Name (Naeem Islam)**  
+MD.Naeem Islam
 Vehicle Rental System Backend Developer  
