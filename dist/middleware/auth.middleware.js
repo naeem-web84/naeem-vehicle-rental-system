@@ -1,0 +1,33 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.authMiddleware = void 0;
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const config_1 = __importDefault(require("../config"));
+const authMiddleware = (req, res, next) => {
+    const authReq = req;
+    const authHeader = req.headers.authorization;
+    if (!authHeader) {
+        return res.status(401).json({ message: "No token provided" });
+    }
+    const [scheme, token] = authHeader.split(" ");
+    if (scheme !== "Bearer" || !token) {
+        return res.status(401).json({ message: "Invalid token format" });
+    }
+    try {
+        const decoded = jsonwebtoken_1.default.verify(token, config_1.default.JWT_SECRET);
+        authReq.user = {
+            id: Number(decoded.id),
+            email: decoded.email,
+            role: decoded.role,
+            name: decoded.name,
+        };
+        next();
+    }
+    catch (error) {
+        return res.status(401).json({ message: "Token verification failed" });
+    }
+};
+exports.authMiddleware = authMiddleware;
